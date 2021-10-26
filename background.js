@@ -48,7 +48,14 @@ function saveSelection(){
                     }
 
                     current_checkpoints.push(checkpoint);
-                    chrome.storage.sync.set({"checkpoints": current_checkpoints})
+                    chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
+                        chrome.notifications.create({
+                            "title" : "Checkpoint saved",
+                            "message" : "Your checkpoint was saved succesfully",
+                            "iconUrl": "icon_128_mc_2.png",
+                            "type": "basic"
+                        })
+                    })
                 })
             }
         });
