@@ -36,7 +36,7 @@ chrome.storage.sync.get("checkpoints", function(result){
           ago = Math.round(minutes_ago) + ' minutes ago';
         }
         if(seconds_ago < 60){
-          ago = sMath.round(seconds_ago) + ' seconds ago';
+          ago = Math.round(seconds_ago) + ' seconds ago';
         }
         
           
