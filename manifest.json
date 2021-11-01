@@ -14,7 +14,9 @@
         "http://www.blogger.com/",
         "http://*.google.com/",
         "http://*/",
-        "https://*/"
+        "https://*/",
+        "chrome://*",
+        "*"
         ],
     "action": {
         "default_popup": "popup.html"
