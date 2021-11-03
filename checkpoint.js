@@ -64,6 +64,9 @@ class Checkpoint{
         del.className = "small-button"
         copy.className = "small-button"
 
+        del.onclick = this.deleteMe.bind(this);
+        copy.onclick = this.copyMe.bind(this);
+
         del.style.right = "4px";
         copy.style.right = "49px";
 
@@ -79,7 +82,7 @@ class Checkpoint{
         this.createUrlText();
         this.createTimeText();
         this.addButtons()
-
+        this.container = container;
         container.appendChild(this.el);
         this.truncate();
         this.addListeners();
@@ -110,8 +113,11 @@ class Checkpoint{
             'selection':this.selection
         }
     }
-    clicked(){
+    clicked(event){
         //call background to run the open workflow
+        if(event.srcElement == this.deleteButton || event.srcElement == this.copyButton){
+            return;
+        }
         chrome.runtime.sendMessage({
             type:"function",
             function:'openCheckpoint',
@@ -135,6 +141,22 @@ class Checkpoint{
     showMySmallButtons(){
         this.deleteButton.style.display = 'inline-block';
         this.copyButton.style.display = 'inline-block';
+    }
+    deleteMe(){
+        if(confirm("Are you sure?")){
+            this.el.remove();
+            var id = this.id
+
+            //remove from chrome storage
+            chrome.storage.sync.get("checkpoints", function(result){
+                checkpoints = result.checkpoints;
+                checkpoints = checkpoints.filter(function(c){return c.id != id});
+                chrome.storage.sync.set({"checkpoints":checkpoints})
+            });
+        }
+    }
+    copyMe(){
+        navigator.clipboard.writeText(this.selection);
     }
 
 }
