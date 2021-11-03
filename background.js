@@ -160,7 +160,7 @@ async function scrollDown(to){
             args:[to],
             func: function(to){
                 //scroll down
-                window.scrollTo(0, to)
+                window.onload = window.scrollTo(0, to)
             }
         });
         chrome.tabs.onUpdated.removeListener(arguments.callee)
