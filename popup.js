@@ -5,6 +5,8 @@ chrome.storage.sync.get("color", ({ color }) => {
   changeColor.style.backgroundColor = color;
 });
 
+const MAX_CHECKPOINT_HEIGHT = 100;
+
 checkpoints = []
 function loadCheckpoints(){
   chrome.storage.sync.get("checkpoints", function(result){
@@ -12,6 +14,7 @@ function loadCheckpoints(){
       var now = new Date().getTime();
       checkpoints.reverse();
       console.log(checkpoints)
+
       for(point of checkpoints){
           console.log(point)
           //create checkpoint element
@@ -20,11 +23,18 @@ function loadCheckpoints(){
           if(point["id"]){
             el.id = point.id;
           }
-
           var textEl = document.createElement('p');
           textEl.innerText = point.selection;
           textEl.className = 'selection';
           el.appendChild(textEl)
+
+          
+          var textEl = document.createElement('p');
+          textEl.innerText = getURLBase(point.url);
+          textEl.className = 'url';
+          el.appendChild(textEl)
+          
+
           //create sub elements
           var time = document.createElement('p');
           
@@ -69,6 +79,9 @@ function loadCheckpoints(){
           el.appendChild(copy)
 
           document.getElementById("checkpoints").appendChild(el);
+
+          truncateCheckpoint(el);
+
           addListeners()
       }
   })
@@ -151,3 +164,37 @@ chrome.runtime.onMessage.addListener(
 
 
 
+
+function getURLBase(url){
+  if(url.includes("//")){
+    url = url.split("//")[1];
+  }
+  return url.split("/")[0]
+}
+function getCheckpointBase(checkpoint){
+  var el = document.createElement('p');
+  el.innerText = checkpoint;
+  el.style.width = "200px";
+  document.body.appendChild(el)
+  console.log(el.offsetHeight);
+
+  if(checkpoint.length > 140){
+    checkpoint = checkpoint.substring(0,140) + '...';
+  }
+  return checkpoint;
+}
+
+function truncateCheckpoint(el){
+  //the element has been pushed to the extension
+  //but it might be too high
+
+  //we decrease the length of the string until we reach a desired height
+  var checkText = el.querySelector(".selection");
+  length = checkText.innerText.length
+  while(el.offsetHeight > MAX_CHECKPOINT_HEIGHT){
+    length -= 10
+    //only add the dots if actually decreased in size
+    checkText.innerText = checkText.innerText.substring(0,length) + "..."
+  }
+
+}
