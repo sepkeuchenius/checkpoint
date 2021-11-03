@@ -12,7 +12,6 @@ function loadCheckpoints(){
   chrome.storage.sync.get("checkpoints", function(result){
       checkpoints = result.checkpoints;
       checkpoints.reverse();
-      console.log(checkpoints)
       var container = document.getElementById('checkpoints');
       for(point of checkpoints){
           console.log(point)
@@ -27,7 +26,6 @@ function loadCheckpoints(){
 
 window.onload = function(){
   loadCheckpoints();
-  // addListeners();
 }
 
 
