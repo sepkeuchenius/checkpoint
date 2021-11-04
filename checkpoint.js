@@ -110,7 +110,7 @@ class Checkpoint{
             'url': this.url,
             'selection':this.selection,
             'created':this.created,
-            'selection':this.selection
+            'scroll':this.scroll,
         }
     }
     clicked(event){
