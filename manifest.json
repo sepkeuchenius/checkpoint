@@ -30,12 +30,6 @@
                 "linux": "Ctrl+Y"
             },
             "description": "Save checkpoint"
-        },
-        "clear_checkpoints": {
-            "suggested_key": {
-                "linux": "Ctrl+Q"
-            },
-            "description": "Delete checkpoints"
         }
     }
 
