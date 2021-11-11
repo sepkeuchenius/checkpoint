@@ -4,6 +4,7 @@ class Checkpoint{
         this.url = obj.url;
         this.selection = obj.selection;
         this.scroll = obj.scroll;
+        this.element = obj.element;
     }
     createElement(){
         var el = document.createElement('div');
@@ -111,6 +112,8 @@ class Checkpoint{
             'selection':this.selection,
             'created':this.created,
             'scroll':this.scroll,
+            'element':this.element,
+            'id':this.id,
         }
     }
     clicked(event){
