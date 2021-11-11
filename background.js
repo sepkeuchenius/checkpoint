@@ -144,6 +144,7 @@ async function saveTab(){
     var current =  await getCurrentTab();
     var selection = await getTabSelection(current);
     var url = current.url;
+    var title = current.title;
     var scroll = await getTabScroll(current);
     var element = await getTabSelectedElement(current);
     // var selectedElement = getSelectedElement(true);
@@ -158,7 +159,8 @@ async function saveTab(){
             'url': url,
             'scroll':  scroll,
             "id": (Math.random() * 10000).toFixed(0),
-            "element":element
+            "element":element,
+            "title":title
         }
 
         current_checkpoints.push(checkpoint);
