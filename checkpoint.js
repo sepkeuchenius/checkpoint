@@ -5,6 +5,8 @@ class Checkpoint{
         this.selection = obj.selection;
         this.scroll = obj.scroll;
         this.element = obj.element;
+        this.title = obj.title;
+        this.faviconUrl = obj.faviconUrl;
     }
     createElement(){
         var el = document.createElement('div');
@@ -21,10 +23,17 @@ class Checkpoint{
     }
     createUrlText(){
         var textEl = document.createElement('p');
-        textEl.innerText = getURLBase(this.url);
+        textEl.innerText = getURLBase(this.url) + " | " + this.title;
         textEl.className = 'url';
         this.urlElement = textEl;
         this.el.appendChild(textEl)
+    }
+    createIcon(){
+        var iconEl = document.createElement('img');
+        iconEl.src = this.faviconUrl;
+        iconEl.className = 'checkpoint-icon';
+        this.iconElement = iconEl;
+        this.el.appendChild(iconEl)
     }
     calcTimeAgo(){
         var now = new Date().getTime();
@@ -83,6 +92,9 @@ class Checkpoint{
         this.createUrlText();
         this.createTimeText();
         this.addButtons()
+        if(this.faviconUrl){
+            this.createIcon();
+        }
         this.container = container;
         container.appendChild(this.el);
         this.truncate();
@@ -94,11 +106,19 @@ class Checkpoint{
 
         //we decrease the length of the string until we reach a desired height
         var checkText = this.selectionElement;
-        length = checkText.innerText.length
+        var titleText = this.urlElement;
+        var checkLength = checkText.innerText.length
+        var urlLength = titleText.innerText.length
         while(this.el.offsetHeight > MAX_CHECKPOINT_HEIGHT){
-            length -= 10
+            if(checkLength > urlLength){
+                checkLength -= 10
+                checkText.innerText = checkText.innerText.substring(0,checkLength) + "..."
+            }
+            else{
+                urlLength -= 10
+                titleText.innerText = titleText.innerText.substring(0,urlLength) + "..."
+            }
             //only add the dots if actually decreased in size
-            checkText.innerText = checkText.innerText.substring(0,length) + "..."
         }
     }
     addListeners(){
@@ -125,8 +145,6 @@ class Checkpoint{
             type:"function",
             function:'openCheckpoint',
             checkpoint: this.getJSON()
-        }, function(response) {
-            console.log(response.success);
         });
     }
     hover(){
@@ -160,6 +178,18 @@ class Checkpoint{
     }
     copyMe(){
         navigator.clipboard.writeText(this.selection);
+    }
+    hide(){
+        this.el.style.display = "none";
+    }
+    show(){
+        this.el.style.display = "block";
+    }
+    search(keyword){
+        var selectionContains = this.selection.includes(keyword);
+        var urlContains = this.url.includes(keyword);
+        var titleContains = this.title.includes(keyword);
+        return selectionContains || urlContains || titleContains
     }
 
 }
