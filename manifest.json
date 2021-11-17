@@ -7,16 +7,14 @@
         "service_worker": "background.js"
     },
     "icons":{
-        "128":"icon_128_mc_2.png"
+        "128":"checkpoint_128.png"
     },
     "permissions": ["storage", "scripting", "tabs", "notifications"],
     "host_permissions": [
         "http://www.blogger.com/",
         "http://*.google.com/",
         "http://*/",
-        "https://*/",
-        "chrome://*",
-        "*"
+        "https://*/"
         ],
     "action": {
         "default_popup": "popup.html"
