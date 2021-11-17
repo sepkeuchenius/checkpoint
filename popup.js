@@ -1,16 +1,13 @@
-// Initialize button with user's preferred color
-let changeColor = document.getElementById("changeColor");
+//constants
+const MAX_CHECKPOINT_HEIGHT = 200;
 
-chrome.storage.sync.get("color", ({ color }) => {
-  changeColor.style.backgroundColor = color;
-});
-
-const MAX_CHECKPOINT_HEIGHT = 100;
-
-checkpoints = []
+allCheckpoints = []
 function loadCheckpoints(){
   chrome.storage.sync.get("checkpoints", function(result){
-      checkpoints = result.checkpoints;
+    if(!result.checkpoints){
+      return;
+    }
+      var checkpoints = result.checkpoints;
       checkpoints.reverse();
       var container = document.getElementById('checkpoints');
       for(point of checkpoints){
@@ -18,6 +15,7 @@ function loadCheckpoints(){
           //create checkpoint element
           checkpoint = new Checkpoint(point);
           checkpoint.draw(container);
+          allCheckpoints.push(checkpoint)
 
           // addListeners()
       }
@@ -26,8 +24,8 @@ function loadCheckpoints(){
 
 window.onload = function(){
   loadCheckpoints();
+  addSearchListener();
 }
-
 
 
 async function getCurrentTab() {
@@ -35,18 +33,19 @@ async function getCurrentTab() {
   let [tab] = await chrome.tabs.query(queryOptions);
   return tab;
 }
-
-
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if(request.type == 'function'){
-      if(request.function == 'openWindow'){
-        window.open(request.url);
-        window.setTimeout(function(){
-          sendResponse({success:true})
-        },500)
-      }
+function addSearchListener(){
+  document.querySelector('#search').addEventListener('input', search)
+}
+function search(event){
+  value = event.srcElement.value;
+  for(checkpoint of allCheckpoints){
+    if(checkpoint.search(value)){
+      checkpoint.show();
     }
-  });
+    else{
+      checkpoint.hide();
+    }
 
+  }
 
+}
