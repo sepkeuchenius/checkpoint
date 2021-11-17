@@ -1,21 +1,11 @@
-// background.js
-
-let color = '#3aa757';
-
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({ color });
-  console.log('Default background color set to %cgreen', `color: ${color}`);
-    // chrome.storage.sync.set({"checkpoints": []})
-});
-
 chrome.commands.onCommand.addListener((command) => {
     console.log(`Command: ${command}`);
        if(command == 'save_checkpoint'){
        saveTab()
     }
-    else if(command == "clear_checkpoints"){
-        chrome.storage.sync.remove("checkpoints")
-    }
+    // else if(command == "clear_checkpoints"){
+    //     chrome.storage.sync.remove("checkpoints")
+    // }
     
 });
 function getSelectedElement(isStart = true) {
@@ -65,45 +55,6 @@ function getSelection(){
 function getScroll(){
     return window.pageYOffset;
 }
-function saveSelection(){
-   return chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-        if(tabs.length == 0){
-            return false;
-        }
-        chrome.scripting.executeScript(
-            {
-              target: {tabId: tabs[0].id, allFrames: true},
-              func: getSelection,
-            },
-            (injectionResults) => {
-              for (const frameResult of injectionResults){
-                console.log('Selection: ' + frameResult.result);
-                
-                //save the selection in chrome sync storage
-                chrome.storage.sync.get({"checkpoints": []}, function(result){
-                    current_checkpoints = result.checkpoints;
-                    console.log(current_checkpoints);
-
-                    var checkpoint = {
-                        'created': new Date().getTime(),
-                        'selection': frameResult.result,
-                        'url': tabs[0].url
-                    }
-
-                    current_checkpoints.push(checkpoint);
-                    chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
-                        chrome.notifications.create({
-                            "title" : "Checkpoint saved",
-                            "message" : "Your checkpoint was saved succesfully",
-                            "iconUrl": "icon_128_mc_2.png",
-                            "type": "basic"
-                        })
-                    })
-                })
-            }
-        });
-      });
-}
 
 async function getCurrentTab() {
     let queryOptions = { active: true, currentWindow: true };
@@ -142,11 +93,16 @@ async function getTabSelectedElement(tab) {
 
 async function saveTab(){
     var current =  await getCurrentTab();
+    if(current.url.includes("chrome://")){
+        buildNotification("Oops", "Chrome does not allow you to make a checkpoint of this page.")
+        return
+    }
     var selection = await getTabSelection(current);
     var url = current.url;
     var title = current.title;
     var scroll = await getTabScroll(current);
     var element = await getTabSelectedElement(current);
+    var faviconUrl = current.favIconUrl;
     // var selectedElement = getSelectedElement(true);
     //save the selection in chrome sync storage
     chrome.storage.sync.get({"checkpoints": []}, function(result){
@@ -160,17 +116,13 @@ async function saveTab(){
             'scroll':  scroll,
             "id": (Math.random() * 10000).toFixed(0),
             "element":element,
-            "title":title
+            "title":title,
+            "faviconUrl": faviconUrl
         }
 
         current_checkpoints.push(checkpoint);
         chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
-            chrome.notifications.create({
-                "title" : "Checkpoint saved",
-                "message" : "Your checkpoint was saved succesfully" + res,
-                "iconUrl": "icon_128_mc_2.png",
-                "type": "basic",
-            })
+            buildNotification("Done!", "Checkpoint created.")
         })
     });
 }
@@ -195,7 +147,6 @@ chrome.runtime.onMessage.addListener(
 
 async function openCheckpoint(checkpoint){
     //open window and scroll down
-    await openWindow(checkpoint.url, checkpoint.scroll);
     //listen for the tab to be created
     console.log(checkpoint)
     chrome.tabs.onUpdated.addListener(async function(tabId){
@@ -205,7 +156,7 @@ async function openCheckpoint(checkpoint){
         //remove the listener
         chrome.tabs.onUpdated.removeListener(arguments.callee)
     })
-
+    await openWindow(checkpoint.url, checkpoint.scroll);
 }
 
 async function openWindow(url,to){
@@ -221,7 +172,7 @@ async function scrollDown(to,element, tabId){
         args:[to, element],
         func: function(to, element){
             //scroll down
-            // window.onload = window.scrollTo(0, to);  
+            window.onload = window.scrollTo(0, to);  
         }
     });   
 }
@@ -235,8 +186,10 @@ async function selectRange(element, tabId){
         func: function(element){
             //scroll down
             var element = document.querySelector("#"+element)
-            element.style.border = "3px solid blue";   
-            element.scrollIntoView({block:"center"})
+            window.onload = function(){
+                element.style.border = "3px solid blue";   
+                element.scrollIntoView({block:"center"})
+            }
         }
     });  
 }
@@ -245,6 +198,15 @@ async function getCurrentTab() {
     let queryOptions = { active: true, currentWindow: true };
     let [tab] = await chrome.tabs.query(queryOptions);
     return tab;
+}
+
+async function buildNotification(title, content){
+    chrome.notifications.create({
+        "title" : title,
+        "message" : content,
+        "iconUrl": "icon_128_mc_2.png",
+        "type": "basic",
+    })
 }
   
   
