@@ -8,6 +8,18 @@ chrome.commands.onCommand.addListener((command) => {
     // }
     
 });
+chrome.runtime.onInstalled.addListener(() => {
+    buildNotification("Welcome to Checkpoint!", "To save a webpage, press CTRL + SHIFT + Y, or CTRL + Y. You can also use the right click menu.")
+    chrome.contextMenus.create({
+        "title":"Add to Checkpoint",
+        "id": "0",
+    })
+})
+
+chrome.contextMenus.onClicked.addListener((onClickData, tab) => {
+    saveTab(tab)
+})
+
 function getSelectedElement(isStart = true) {
     var range, sel, container;
     if (document.selection) {
@@ -91,8 +103,13 @@ async function getTabSelectedElement(tab) {
 }
 
 
-async function saveTab(){
-    var current =  await getCurrentTab();
+async function saveTab(tab){
+    if(!tab){
+        var current =  await getCurrentTab();
+    }
+    else{
+        var current = tab;
+    }
     if(current.url.includes("chrome://")){
         buildNotification("Oops", "Chrome does not allow you to make a checkpoint of this page.")
         return
@@ -103,12 +120,8 @@ async function saveTab(){
     var scroll = await getTabScroll(current);
     var element = await getTabSelectedElement(current);
     var faviconUrl = current.favIconUrl;
-    // var selectedElement = getSelectedElement(true);
-    //save the selection in chrome sync storage
     chrome.storage.sync.get({"checkpoints": []}, function(result){
         current_checkpoints = result.checkpoints;
-        console.log(current_checkpoints);
-
         var checkpoint = {
             'created': new Date().getTime(),
             'selection': selection,
@@ -119,7 +132,6 @@ async function saveTab(){
             "title":title,
             "faviconUrl": faviconUrl
         }
-
         current_checkpoints.push(checkpoint);
         chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
             buildNotification("Done!", "Checkpoint created.")
@@ -204,7 +216,7 @@ async function buildNotification(title, content){
     chrome.notifications.create({
         "title" : title,
         "message" : content,
-        "iconUrl": "icon_128_mc_2.png",
+        "iconUrl": "checkpoint_128.png",
         "type": "basic",
     })
 }
