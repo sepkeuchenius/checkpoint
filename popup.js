@@ -4,7 +4,8 @@ const MAX_CHECKPOINT_HEIGHT = 200;
 allCheckpoints = []
 function loadCheckpoints(){
   chrome.storage.sync.get("checkpoints", function(result){
-    if(!result.checkpoints){
+    if(!result.checkpoints || result.checkpoints.length == 0){
+      document.getElementById("checkpoints").innerHTML = "<center>Press CTRL + SHIFT + Y or CTRL + Y to add checkpoints from a website.</center>"
       return;
     }
       var checkpoints = result.checkpoints;
