@@ -9,7 +9,7 @@
     "icons":{
         "128":"checkpoint_128.png"
     },
-    "permissions": ["storage", "scripting", "tabs", "notifications"],
+    "permissions": ["storage", "scripting", "tabs", "notifications","contextMenus"],
     "host_permissions": [
         "http://www.blogger.com/",
         "http://*.google.com/",
