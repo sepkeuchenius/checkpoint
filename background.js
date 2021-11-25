@@ -5,9 +5,12 @@ chrome.commands.onCommand.addListener((command) => {
     }
     // else if(command == "clear_checkpoints"){
     //     chrome.storage.sync.remove("checkpoints")
-    // }
-    
+    // } 
 });
+chrome.runtime.onUpdateAvailable.addListener(() => {
+    buildNotification("Update!", "There is an update available for Chekpoint. Restarting now.")
+    chrome.runtime.reload()
+})
 chrome.runtime.onInstalled.addListener(() => {
     buildNotification("Welcome to Checkpoint!", "To save a webpage, press CTRL + SHIFT + Y, or CTRL + Y. You can also use the right click menu.")
     chrome.contextMenus.create({
@@ -15,7 +18,6 @@ chrome.runtime.onInstalled.addListener(() => {
         "id": "0",
     })
 })
-
 chrome.contextMenus.onClicked.addListener((onClickData, tab) => {
     saveTab(tab)
 })
