@@ -170,7 +170,7 @@ class Checkpoint{
 
             //remove from chrome storage
             chrome.storage.sync.get("checkpoints", function(result){
-                checkpoints = result.checkpoints;
+                var checkpoints = result.checkpoints;
                 checkpoints = checkpoints.filter(function(c){return c.id != id});
                 chrome.storage.sync.set({"checkpoints":checkpoints})
             });
