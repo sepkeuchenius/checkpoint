@@ -1,3 +1,5 @@
+var UPDATE_MESSAGE = "Create checkpoints from the right-click menu." //a small message shown to the user on update. 
+
 chrome.commands.onCommand.addListener((command) => {
     console.log(`Command: ${command}`);
        if(command == 'save_checkpoint'){
@@ -11,12 +13,15 @@ chrome.runtime.onUpdateAvailable.addListener(() => {
     buildNotification("Update!", "There is an update available for Chekpoint. Restarting now.")
     chrome.runtime.reload()
 })
-chrome.runtime.onInstalled.addListener(() => {
-    buildNotification("Welcome to Checkpoint!", "To save a webpage, press CTRL + SHIFT + Y, or CTRL + Y. You can also use the right click menu.")
-    chrome.contextMenus.create({
-        "title":"Add to Checkpoint",
-        "id": "0",
-    })
+chrome.runtime.onInstalled.addListener((details) => {
+    if(details.reason == "install"){
+        buildNotification("Welcome to Checkpoint!", "To save a webpage, press CTRL + SHIFT + Y, or CTRL + Y. You can also use the right click menu.")
+        startExtension()
+    }
+    else if(details.reason == 'update'){
+        buildNotification("Checkpoint has been updated!", UPDATE_MESSAGE)
+        startExtension
+    }
 })
 chrome.contextMenus.onClicked.addListener((onClickData, tab) => {
     saveTab(tab)
@@ -223,4 +228,10 @@ async function buildNotification(title, content){
     })
 }
   
-  
+function startExtension(){
+    //create the context menu
+    chrome.contextMenus.create({
+        "title":"Add to Checkpoint",
+        "id": "0",
+    })
+}
