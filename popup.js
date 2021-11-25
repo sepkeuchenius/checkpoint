@@ -17,8 +17,6 @@ function loadCheckpoints(){
           checkpoint = new Checkpoint(point);
           checkpoint.draw(container);
           allCheckpoints.push(checkpoint)
-
-          // addListeners()
       }
   })
 }
