@@ -97,6 +97,7 @@ class Checkpoint{
     }
     addTag(tag){
         var el = document.createElement("p")
+        el.className = 'tag'
         this.tagElements.push(el)
         el.innerText = tag
         this.el.appendChild(el)
