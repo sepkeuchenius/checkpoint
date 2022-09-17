@@ -24,7 +24,12 @@ chrome.runtime.onInstalled.addListener((details) => {
     }
 })
 chrome.contextMenus.onClicked.addListener((onClickData, tab) => {
-    saveTab(tab)
+    if(onClickData["menuItemId"] == "add_to_checkpoint"){
+        saveTab(tab)
+    } 
+    else if(onClickData["menuItemId"] == "add_selection_to_checkpoint"){
+        saveTab(tab)
+    }
 })
 
 function getSelectedElement(isStart = true) {
@@ -233,5 +238,10 @@ function startExtension(){
     chrome.contextMenus.create({
         "title":"Add to Checkpoint",
         "id": "add_to_checkpoint",
+    }),
+    chrome.contextMenus.create({
+        "title": "Add to Checkpoint",
+        "id": "add_selection_to_checkpoint",
+        "contexts": ["selection"]
     })
 }
