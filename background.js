@@ -126,29 +126,36 @@ async function saveTab(tab){
         buildNotification("Oops", "Chrome does not allow you to make a checkpoint of this page.")
         return
     }
-    var selection = await getTabSelection(current);
-    var url = current.url;
-    var title = current.title;
-    var scroll = await getTabScroll(current);
-    var element = await getTabSelectedElement(current);
-    var faviconUrl = current.favIconUrl;
-    chrome.storage.sync.get({"checkpoints": []}, function(result){
-        current_checkpoints = result.checkpoints;
-        var checkpoint = {
-            'created': new Date().getTime(),
-            'selection': selection,
-            'url': url,
-            'scroll':  scroll,
-            "id": (Math.random() * 10000).toFixed(0),
-            "element":element,
-            "title":title,
-            "faviconUrl": faviconUrl
-        }
-        current_checkpoints.push(checkpoint);
-        chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
-            buildNotification("Done!", "Checkpoint created.")
-        })
-    });
+    try {
+        var selection = await getTabSelection(current);
+        var url = current.url;
+        var title = current.title;
+        var scroll = await getTabScroll(current);
+        var element = await getTabSelectedElement(current);
+        var faviconUrl = current.favIconUrl;
+        chrome.storage.sync.get({"checkpoints": []}, function(result){
+            current_checkpoints = result.checkpoints;
+            var checkpoint = {
+                'created': new Date().getTime(),
+                'selection': selection,
+                'url': url,
+                'scroll':  scroll,
+                "id": (Math.random() * 10000).toFixed(0),
+                "element":element,
+                "title":title,
+                "faviconUrl": faviconUrl
+            }
+            current_checkpoints.push(checkpoint);
+            chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
+                buildNotification("Done!", "Checkpoint created.")
+            })
+        });
+    }
+    catch(err){
+        console.log(err)
+        buildNotification("Oops.","Can't make a Checkpoint from here. Sorry.")
+    }
+    
 }
 var functionMapping = 
 {
