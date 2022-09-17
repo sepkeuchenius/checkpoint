@@ -101,7 +101,12 @@ class Checkpoint{
         this.tagElements.push(el)
         el.innerText = tag
         this.el.appendChild(el)
+        el.onclick = function(){
+            document.getElementById('search').value = tag
+            document.getElementById('search').focus()
+        }
     }
+    
     deleteTag(tag){
         tagIndex = this.tags.indexOf(tag)
         this.el.removeChild(this.tagElements[tagIndex])
@@ -165,7 +170,7 @@ class Checkpoint{
     }
     clicked(event){
         //call background to run the open workflow
-        if(this.buttons.includes(event.srcElement)){
+        if(this.buttons.includes(event.srcElement) || this.tagElements.includes(event.srcElement)){
             return;
         }
         chrome.runtime.sendMessage({
@@ -226,7 +231,8 @@ class Checkpoint{
         var selectionContains = this.selection.includes(keyword);
         var urlContains = this.url.includes(keyword);
         var titleContains = this.title.includes(keyword);
-        return selectionContains || urlContains || titleContains
+        var tagsContain = this.tags.includes(keyword);
+        return selectionContains || urlContains || titleContains || tagsContain
     }
     saveMe(){
         var json = this.getJSON();

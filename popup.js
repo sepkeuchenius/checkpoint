@@ -34,6 +34,7 @@ async function getCurrentTab() {
 }
 function addSearchListener(){
   document.querySelector('#search').addEventListener('input', search)
+  document.querySelector('#search').addEventListener('focus', search)
 }
 function search(event){
   value = event.srcElement.value;
