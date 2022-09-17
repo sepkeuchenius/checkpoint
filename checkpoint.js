@@ -82,7 +82,7 @@ class Checkpoint{
     }
     addButtons(){
         this.buttons = [
-            this.addButtonToCheckpoint("Star", this.starMe, 30), 
+            // this.addButtonToCheckpoint("Star", this.starMe, 30), 
             this.addButtonToCheckpoint("Tag", this.tagMe, 30), 
             this.addButtonToCheckpoint("Delete", this.deleteMe, 45),            
             this.addButtonToCheckpoint("Copy", this.copyMe, 35)          
@@ -217,7 +217,7 @@ class Checkpoint{
     }
     tagMe(){
         var tag = prompt("Write your tag")
-        if(tag.lentght > 0){
+        if(tag.length > 0){
             this.tags.push(tag)
             this.addTag(tag)
             this.saveMe()
