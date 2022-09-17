@@ -12,9 +12,12 @@ button {
                 0 0 0 4px black;
   }
   #checkpoints{
-    overflow-y: hidden;
+    overflow-y: auto;
     max-width: 100%;
-    overflow-x: hidden;
+    height: calc( 100% - 60px ) ;
+    position: absolute;
+    top: 60px;
+    /* overflow-x: hidden; */
     /* overflow-x: none; */
   }
 #title{
@@ -27,6 +30,8 @@ button {
   position: sticky;
   display: inline-block;
   vertical-align: top;
+  background-color: white;
+  border-radius: 5px;;
   /* background: linear-gradient(190deg,white, rgb(113, 149, 151), white); */
   /* background-color: conic-gradient(); */
 }
@@ -36,7 +41,6 @@ body{
   padding: 0%;
   font-family: 'Poppins', sans-serif;
   margin:0px;
-  overflow: none;
   background: linear-gradient(0, aliceblue, white);
   background-repeat: no-repeat;
   background-attachment: fixed;
