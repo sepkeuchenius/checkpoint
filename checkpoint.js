@@ -7,6 +7,12 @@ class Checkpoint{
         this.element = obj.element;
         this.title = obj.title;
         this.faviconUrl = obj.faviconUrl;
+        this.currentButtonPosition = 4 //start 4 pixels from the side
+        if(!("tags" in obj)) this.tags = []
+        else this.tags = obj.tags
+        if(!("starred" in obj)) this.starred = false
+        else this.starred = true
+        
     }
     createElement(){
         var el = document.createElement('div');
@@ -64,27 +70,42 @@ class Checkpoint{
         this.timeElement = time;
         this.el.appendChild(time)
     }
+    addButtonToCheckpoint(name, onclickFunction, width){
+        var button = document.createElement('button');
+        button.innerText = name;
+        button.className = "small-button"
+        button.onclick = onclickFunction.bind(this);
+        button.style.right = this.currentButtonPosition.toString() + "px";
+        this.currentButtonPosition += width
+        this.el.appendChild(button)
+        return button
+    }
     addButtons(){
-        var del = document.createElement('button');
-        var copy = document.createElement('button');
-
-        del.innerText = "Delete";
-        copy.innerText = "Copy";
-
-        del.className = "small-button"
-        copy.className = "small-button"
-
-        del.onclick = this.deleteMe.bind(this);
-        copy.onclick = this.copyMe.bind(this);
-
-        del.style.right = "4px";
-        copy.style.right = "49px";
-
-        this.deleteButton  = del
-        this.copyButton = copy
-
-        this.el.appendChild(del)
-        this.el.appendChild(copy)
+        this.buttons = [
+            this.addButtonToCheckpoint("Star", this.starMe, 30), 
+            this.addButtonToCheckpoint("Tag", this.tagMe, 30), 
+            this.addButtonToCheckpoint("Delete", this.deleteMe, 45),            
+            this.addButtonToCheckpoint("Copy", this.copyMe, 35)          
+        ]
+        console.log(this.buttons)
+    }
+    addTags(){
+        this.tagElements = []
+        for(var tag of this.tags){
+            this.addTag(tag)
+        }
+    }
+    addTag(tag){
+        var el = document.createElement("p")
+        this.tagElements.push(el)
+        el.innerText = tag
+        this.el.appendChild(el)
+    }
+    deleteTag(tag){
+        tagIndex = this.tags.indexOf(tag)
+        this.el.removeChild(this.tagElements[tagIndex])
+        this.tagElements.splice(tagIndex, 1)
+        this.tags.splice(tagIndex, 1)
     }
     draw(container){
         this.createElement();
@@ -95,6 +116,7 @@ class Checkpoint{
         if(this.faviconUrl){
             this.createIcon();
         }
+        this.addTags()
         this.container = container;
         container.appendChild(this.el);
         this.truncate();
@@ -134,11 +156,15 @@ class Checkpoint{
             'scroll':this.scroll,
             'element':this.element,
             'id':this.id,
+            'starred': this.starred,
+            'tags': this.tags,
+            'faviconUrl': this.faviconUrl,
+            'title': this.title
         }
     }
     clicked(event){
         //call background to run the open workflow
-        if(event.srcElement == this.deleteButton || event.srcElement == this.copyButton){
+        if(this.buttons.includes(event.srcElement)){
             return;
         }
         chrome.runtime.sendMessage({
@@ -160,8 +186,9 @@ class Checkpoint{
         });
     }
     showMySmallButtons(){
-        this.deleteButton.style.display = 'inline-block';
-        this.copyButton.style.display = 'inline-block';
+        for(var button of this.buttons){
+            button.style.display = "inline-block"
+        }
     }
     deleteMe(){
         if(confirm("Are you sure?")){
@@ -179,6 +206,15 @@ class Checkpoint{
     copyMe(){
         navigator.clipboard.writeText(this.selection);
     }
+    starMe(){
+        this.starred = true
+    }
+    tagMe(){
+        var tag = prompt("Write your tag")
+        this.tags.push(tag)
+        this.addTag(tag)
+        this.saveMe()
+    }
     hide(){
         this.el.style.display = "none";
     }
@@ -190,6 +226,21 @@ class Checkpoint{
         var urlContains = this.url.includes(keyword);
         var titleContains = this.title.includes(keyword);
         return selectionContains || urlContains || titleContains
+    }
+    saveMe(){
+        var json = this.getJSON();
+        var id = this.id
+        chrome.storage.sync.get("checkpoints", function(result){
+            var current_checkpoints = result.checkpoints;
+            for(var c in current_checkpoints){
+                if(current_checkpoints[c].id == id){
+                    current_checkpoints[c] = json //replace with new 
+                }
+            }
+            chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
+                console.log("Checkpoint " + id + " saved")
+            })
+        });
     }
 
 }

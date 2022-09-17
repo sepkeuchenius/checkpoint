@@ -143,7 +143,9 @@ async function saveTab(tab){
                 "id": (Math.random() * 10000).toFixed(0),
                 "element":element,
                 "title":title,
-                "faviconUrl": faviconUrl
+                "faviconUrl": faviconUrl,
+                "tags": [],
+                "starred": false
             }
             current_checkpoints.push(checkpoint);
             chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
