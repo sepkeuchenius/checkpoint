@@ -217,9 +217,12 @@ class Checkpoint{
     }
     tagMe(){
         var tag = prompt("Write your tag")
-        this.tags.push(tag)
-        this.addTag(tag)
-        this.saveMe()
+        if(tag.lentght > 0){
+            this.tags.push(tag)
+            this.addTag(tag)
+            this.saveMe()
+        }
+        
     }
     hide(){
         this.el.style.display = "none";
