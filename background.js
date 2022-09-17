@@ -20,7 +20,7 @@ chrome.runtime.onInstalled.addListener((details) => {
     }
     else if(details.reason == 'update'){
         buildNotification("Checkpoint has been updated!", UPDATE_MESSAGE)
-        startExtension
+        startExtension()
     }
 })
 chrome.contextMenus.onClicked.addListener((onClickData, tab) => {
@@ -232,6 +232,6 @@ function startExtension(){
     //create the context menu
     chrome.contextMenus.create({
         "title":"Add to Checkpoint",
-        "id": "0",
+        "id": "add_to_checkpoint",
     })
 }
