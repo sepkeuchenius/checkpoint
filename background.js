@@ -1,4 +1,4 @@
-var UPDATE_MESSAGE = "Create checkpoints from the right-click menu." //a small message shown to the user on update. 
+var UPDATE_MESSAGE = "You can now tag your Checkpoints in the extension!" //a small message shown to the user on update. 
 
 chrome.commands.onCommand.addListener((command) => {
     console.log(`Command: ${command}`);
