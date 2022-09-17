@@ -23,9 +23,18 @@
         "save_checkpoint": {
             "suggested_key": {
                 "windows": "Ctrl+Shift+Y",
-                "mac": "Command+Shift+Y",
+                "mac": "Ctrl+Shift+Y",
                 "chromeos": "Ctrl+Shift+Y",
                 "linux": "Ctrl+Y"
+            },
+            "description": "Save checkpoint"
+        },
+        "save_checkpoint_alt": {
+            "suggested_key": {
+                "windows": "Alt+Shift+Y",
+                "mac": "Alt+Shift+Y",
+                "chromeos": "Alt+Shift+Y",
+                "linux": "Alt+Y"
             },
             "description": "Save checkpoint"
         }

@@ -2,7 +2,7 @@ var UPDATE_MESSAGE = "Create checkpoints from the right-click menu." //a small m
 
 chrome.commands.onCommand.addListener((command) => {
     console.log(`Command: ${command}`);
-       if(command == 'save_checkpoint'){
+       if(command == 'save_checkpoint' || command == 'save_checkpoint_alt'){
        saveTab()
     }
     // else if(command == "clear_checkpoints"){
