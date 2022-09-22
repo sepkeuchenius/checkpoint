@@ -27,6 +27,7 @@ button {
     height: calc( 100% - 60px ) ;
     position: absolute;
     top: 60px;
+    width:100%;
     /* overflow-x: hidden; */
     /* overflow-x: none; */
   }
