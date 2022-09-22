@@ -15,7 +15,7 @@ chrome.runtime.onUpdateAvailable.addListener(() => {
 })
 chrome.runtime.onInstalled.addListener((details) => {
     if(details.reason == "install"){
-        buildNotification("Welcome to Checkpoint!", "To save a webpage, press CTRL + SHIFT + Y, or CTRL + Y. You can also use the right click menu.")
+        buildNotification("Welcome to Checkpoint!", "To save a webpage, press CTRL + SHIFT + Y, or ALT + SHIFT + Y. You can also use the right click menu.")
         startExtension()
     }
     else if(details.reason == 'update'){
