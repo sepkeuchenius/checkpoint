@@ -157,7 +157,7 @@ async function saveTab(tab){
         console.log(err)
         buildNotification("Oops.","Can't make a Checkpoint from here. Sorry.")
     }
-    
+    setTimeout(reloadContextMenu, 400)
 }
 var functionMapping = 
 {
@@ -243,7 +243,11 @@ async function buildNotification(title, content){
 }
   
 function startExtension(){
+    reloadContextMenu()
+}
+function reloadContextMenu(){
     //create the context menu
+    chrome.contextMenus.removeAll()
     chrome.contextMenus.create({
         "title":"Add to Checkpoint",
         "id": "add_to_checkpoint",
@@ -252,5 +256,30 @@ function startExtension(){
         "title": "Add to Checkpoint",
         "id": "add_selection_to_checkpoint",
         "contexts": ["selection"]
+    })
+    chrome.storage.sync.get("checkpoints", function(result){
+        if(result.checkpoints && result.checkpoints.length > 0){      
+            //create parent paste menu
+            chrome.contextMenus.create({
+                "id": "paste_checkpoints",
+                "title": "Paste Checkpoint",
+                "contexts": ["editable"]
+            })  
+            var checkpoints = result.checkpoints;
+            checkpoints.reverse();
+
+            for(point of checkpoints){
+                if(point["selection"] && point["selection"].length > 0){
+                    chrome.contextMenus.create({
+                        "title": point['selection'],
+                        "parentId": "paste_checkpoints",
+                        "id": "paste_selections" + point['selection'],
+                        "contexts": ["editable"]
+                    })
+                }
+            }
+        }
+        //
+
     })
 }
