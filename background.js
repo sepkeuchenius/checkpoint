@@ -1,4 +1,4 @@
-var UPDATE_MESSAGE = "You can now tag your Checkpoints in the extension!" //a small message shown to the user on update. 
+var UPDATE_MESSAGE = "Ctrl+Shift+Y or Alt+Shift+Y to add Checkpoints" //a small message shown to the user on update. 
 
 chrome.commands.onCommand.addListener((command) => {
     console.log(`Command: ${command}`);
