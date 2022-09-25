@@ -30,7 +30,35 @@ chrome.contextMenus.onClicked.addListener((onClickData, tab) => {
     else if(onClickData["menuItemId"] == "add_selection_to_checkpoint"){
         saveTab(tab)
     }
+    else if(onClickData["menuItemId"].includes("paste_selection_")){ 
+        console.log("pasting selection")
+        pasteSelection(onClickData["menuItemId"].replace("paste_selection_", ""), tab)
+    }
+    else if(onClickData["menuItemId"] == "paste_all_selections"){
+        console.log("pasting all selections")
+        allSelections = ""
+        chrome.storage.sync.get("checkpoints", function(result){
+            if(result.checkpoints && result.checkpoints.length > 0){  
+                allSelections = result.checkpoints.map((checkpoint) => {return checkpoint.selection}).join("\n")
+            }
+            pasteSelection(allSelections, tab)
+        }
+        );
+    }
 })
+
+function pasteSelection(text, tab){
+    console.log(text)
+    chrome.scripting.executeScript({
+        target: {tabId:tab.id},
+        func: insertSelection,
+        args: [text]
+    })
+}
+function insertSelection(text){
+    console.log(text)
+    document.activeElement.value += text;
+}
 
 function getSelectedElement(isStart = true) {
     var range, sel, container;
@@ -273,11 +301,17 @@ function reloadContextMenu(){
                     chrome.contextMenus.create({
                         "title": point['selection'],
                         "parentId": "paste_checkpoints",
-                        "id": "paste_selections" + point['selection'],
+                        "id": "paste_selection_" + point['selection'],
                         "contexts": ["editable"]
                     })
                 }
             }
+            chrome.contextMenus.create({
+                "title": "Paste all",
+                "parentId": "paste_checkpoints",
+                "id": "paste_all_selections",
+                "contexts": ["editable"]
+            })
         }
         //
 
