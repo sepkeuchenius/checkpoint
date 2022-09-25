@@ -1,4 +1,4 @@
-var UPDATE_MESSAGE = "Ctrl+Shift+Y or Alt+Shift+Y to add Checkpoints" //a small message shown to the user on update. 
+var UPDATE_MESSAGE = "Paste Checkpoint selections from the right click menu!" //a small message shown to the user on update. 
 
 chrome.commands.onCommand.addListener((command) => {
     console.log(`Command: ${command}`);
