@@ -26,4 +26,11 @@ jobs:
       - uses: actions/checkout@v3 
       - name: Chrome Extension upload & publish
         uses: Passiverecords/chrome-extension-upload-action@1.4.1
+        with:
+          refresh-token: 'xxxxxxxxxxxxxxxxxxxxxx'
+          client-id: 'xxxxxxxxxxxxx'
+          client-secret: 'xxxxxxxxxxxx'
+          file-name: './extension.zip'
+          app-id: 'xzc12xzc21cx23'
+          publish: true
 
