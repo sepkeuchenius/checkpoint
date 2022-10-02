@@ -7,6 +7,15 @@ footer {
   /* background:white; */
   text-align:center;
 }
+#add_note{
+  margin:2px calc(15% - 10px);
+  width:70%;
+  padding:3px 10px;
+  border:none;
+  outline:none;
+  height:20px;
+  border-bottom:2px solid rgb(22, 128, 48)
+}
 button {
     height: 30px;
     width: 30px;
@@ -33,9 +42,9 @@ button {
   #checkpoints{
     overflow-y: auto;
     max-width: 100%;
-    height: calc( 100% - 60px ) ;
+    height: calc( 100% - 100px ) ;
     position: absolute;
-    top: 60px;
+    top: 90px;
     width:100%;
     /* overflow-x: hidden; */
     /* overflow-x: none; */
