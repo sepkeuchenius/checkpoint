@@ -1,18 +1,18 @@
 class Checkpoint{
     constructor(obj){
-        this.id = obj.id;
-        this.url = obj.url;
+        this.id = obj.id || (Math.random() * 10000).toFixed(0);
+        this.url = obj.url || "";
         this.selection = obj.selection;
         this.scroll = obj.scroll;
         this.element = obj.element;
-        this.title = obj.title;
-        this.faviconUrl = obj.faviconUrl;
+        this.title = obj.title || "";
+        this.faviconUrl = obj.faviconUrl || "";
         this.currentButtonPosition = 4 //start 4 pixels from the side
         if(!("tags" in obj)) this.tags = []
         else this.tags = obj.tags
         if(!("starred" in obj)) this.starred = false
         else this.starred = true
-        
+        this.created = obj.created || new Date().getTime()
     }
     createElement(){
         var el = document.createElement('div');
@@ -28,11 +28,14 @@ class Checkpoint{
         this.el.appendChild(textEl)
     }
     createUrlText(){
-        var textEl = document.createElement('p');
-        textEl.innerText = getURLBase(this.url) + " | " + this.title;
-        textEl.className = 'url';
-        this.urlElement = textEl;
-        this.el.appendChild(textEl)
+        if(this.url.length > 0 && this.title.length > 0){
+            var textEl = document.createElement('p');
+            textEl.innerText = getURLBase(this.url) + " | " + this.title;
+            textEl.className = 'url';
+            this.urlElement = textEl;
+            this.el.appendChild(textEl)    
+        }
+        
     }
     createIcon(){
         var iconEl = document.createElement('img');
@@ -44,7 +47,7 @@ class Checkpoint{
     calcTimeAgo(){
         var now = new Date().getTime();
         var ago = ""
-        var seconds_ago = (now - point.created) / 1000
+        var seconds_ago = (now - this.created) / 1000
         var minutes_ago = seconds_ago / 60;
         var hours_ago = minutes_ago / 60;
         var days_ago = hours_ago / 24;
@@ -133,21 +136,24 @@ class Checkpoint{
         //but it might be too high
 
         //we decrease the length of the string until we reach a desired height
-        var checkText = this.selectionElement;
-        var titleText = this.urlElement;
-        var checkLength = checkText.innerText.length
-        var urlLength = titleText.innerText.length
-        while(this.el.offsetHeight > MAX_CHECKPOINT_HEIGHT){
-            if(checkLength > urlLength){
-                checkLength -= 10
-                checkText.innerText = checkText.innerText.substring(0,checkLength) + "..."
+        if(this.urlElement){
+            var checkText = this.selectionElement;
+            var titleText = this.urlElement;
+            var checkLength = checkText.innerText.length
+            var urlLength = titleText.innerText.length
+            while(this.el.offsetHeight > MAX_CHECKPOINT_HEIGHT){
+                if(checkLength > urlLength){
+                    checkLength -= 10
+                    checkText.innerText = checkText.innerText.substring(0,checkLength) + "..."
+                }
+                else{
+                    urlLength -= 10
+                    titleText.innerText = titleText.innerText.substring(0,urlLength) + "..."
+                }
+                //only add the dots if actually decreased in size
             }
-            else{
-                urlLength -= 10
-                titleText.innerText = titleText.innerText.substring(0,urlLength) + "..."
-            }
-            //only add the dots if actually decreased in size
         }
+      
     }
     addListeners(){
         this.el.addEventListener('click', this.clicked.bind(this))
@@ -171,6 +177,9 @@ class Checkpoint{
     clicked(event){
         //call background to run the open workflow
         if(this.buttons.includes(event.srcElement) || this.tagElements.includes(event.srcElement)){
+            return;
+        }
+        if(this.url.length < 1){
             return;
         }
         chrome.runtime.sendMessage({
@@ -247,6 +256,17 @@ class Checkpoint{
                     current_checkpoints[c] = json //replace with new 
                 }
             }
+            chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
+                console.log("Checkpoint " + id + " saved")
+            })
+        });
+    }
+    saveMeAsNew(){
+        var json = this.getJSON()
+        var id = this.id;
+        chrome.storage.sync.get("checkpoints", function(result){
+            var current_checkpoints = result.checkpoints;
+            current_checkpoints.push(json)
             chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
                 console.log("Checkpoint " + id + " saved")
             })

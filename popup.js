@@ -2,6 +2,11 @@
 const MAX_CHECKPOINT_HEIGHT = 200;
 
 allCheckpoints = []
+
+function reloadCheckpoints(){
+  document.getElementById("checkpoints").innerHTML = "";
+  loadCheckpoints()
+}
 function loadCheckpoints(){
   chrome.storage.sync.get("checkpoints", function(result){
     if(!result.checkpoints || result.checkpoints.length == 0){
@@ -24,6 +29,7 @@ function loadCheckpoints(){
 window.onload = function(){
   loadCheckpoints();
   addSearchListener();
+  addNoteListener()
 }
 
 
@@ -36,6 +42,9 @@ function addSearchListener(){
   document.querySelector('#search').addEventListener('input', search)
   document.querySelector('#search').addEventListener('focus', search)
 }
+function addNoteListener(){
+  document.querySelector('#add_note').addEventListener('keypress', addNote)
+}
 function search(event){
   value = event.srcElement.value;
   for(checkpoint of allCheckpoints){
@@ -47,5 +56,11 @@ function search(event){
     }
 
   }
-
+}
+function addNote(event){
+  if(event.key == "Enter"){
+    checkpoint = new Checkpoint({"selection": event.srcElement.value})
+    checkpoint.saveMeAsNew()
+    window.setTimeout(reloadCheckpoints, 200)
+  }
 }
