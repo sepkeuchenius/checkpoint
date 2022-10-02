@@ -1,4 +1,4 @@
-var UPDATE_MESSAGE = "Paste Checkpoint selections from the right click menu!" //a small message shown to the user on update. 
+var UPDATE_MESSAGE = "Right click paste & Quickly adding text notes!" //a small message shown to the user on update. 
 
 chrome.commands.onCommand.addListener((command) => {
     console.log(`Command: ${command}`);
