@@ -201,6 +201,10 @@ chrome.runtime.onMessage.addListener(
             //open checkpoint request from extension script
             openCheckpoint(request.checkpoint);
         }
+        if(request.function == 'reloadContextMenu'){
+            //open checkpoint request from extension script
+            reloadContextMenu();
+        }
     }
         sendResponse({success: true});
     }

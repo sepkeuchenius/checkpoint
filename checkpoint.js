@@ -271,6 +271,13 @@ class Checkpoint{
                 console.log("Checkpoint " + id + " saved")
             })
         });
+        window.setTimeout(function(){
+            chrome.runtime.sendMessage({
+                type:"function",
+                function:'reloadContextMenu',
+            });
+        },200)
+        
     }
 
 }
