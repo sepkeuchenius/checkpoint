@@ -1,7 +1,7 @@
 {
     "name": "CheckPoint",
     "description": "Save any part of a page any moment in time.",
-    "version": "0.51",
+    "version": "0.52",
     "manifest_version": 3,
     "background": {
         "service_worker": "background.js"
