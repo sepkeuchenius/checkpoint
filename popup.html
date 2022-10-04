@@ -8,14 +8,47 @@
   </head>
   <body>
     <!-- <button id="changeColor"></button> -->
-    <img src='checkpoint_128.png' id='icon'> &nbsp <h1 id="title">Checkpoints</h1>
+    <img src='menu.png' id="menu"><img src='checkpoint_128.png' id='icon'> &nbsp <h1 id="title">Checkpoints</h1>
     <input type='text' id='search' placeholder="Search..." >
-    <input type="text" id="add_note" placeholder="Add quick note">
-    <div id='checkpoints'></div>
+    <div id="checkpoints_container">
+      <input type="text" id="add_note" placeholder="Add quick note">
+      <div id='checkpoints'></div>
+    </div>
+    <div id="howto">
+      <br>
+      Use Ctrl+Shift+Y or Alt+Shift+Y to save a Checkpoint.<br>
+      You can also save a checkpoint using the right-click menu.<br>
+      If you want, you can select text, right-click the text and save as a Checkpoint.<br>
+      To quickly add some text, you can type in the extension.
+      <br><br>
+      To paste a checkpoint, right-click in a text-field and select paste checkpoint from the menu.<br>
+      <br><br>
+      Checkpoints save everything about your current open tab:
+      <ul>
+        <li>The URL</li>
+        <li>The time</li>
+        <li>The title of the page</li>
+        <li>The text selection</li>
+        <li>How far you scrolled down</li>
+        <li>The element of the page that you are in</li>
+        <li>The icon of the page</li>
+      </ul><br>
+      When you open a checkpoint, all this will automatically be loaded again.
+
+    </div>
+    
+    
 
     <footer>
       This application is still in development. <a href='https://chrome.google.com/webstore/detail/checkpoint/ioghepelnhpfiamjlgbcakmjmlnmmbcc' target="_blank">Feedback</a> is highly appreciated!
     </footer>
+    <sidebar>
+      <item><img src='Tiles/home.svg'>Home</item>
+      <item><img src='Tiles/info.svg'>Help</item>
+      <!-- <item><img src='Tiles/settings.svg'>Settings</item> -->
+      <!-- <item><img src='Tiles/feedback.svg'>Feedback</item> -->
+    </sidebar>
+    <script src="jquery-3.2.0.min.js"></script>
     <script src="utils.js"></script>
     <script src="checkpoint.js"></script>
     <script src="popup.js"></script>

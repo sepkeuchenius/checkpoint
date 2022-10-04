@@ -29,7 +29,9 @@ function loadCheckpoints(){
 window.onload = function(){
   loadCheckpoints();
   addSearchListener();
-  addNoteListener()
+  addNoteListener();
+  addMenuButtonListener();
+  $('item')[0].click()
 }
 
 
@@ -45,6 +47,32 @@ function addSearchListener(){
 function addNoteListener(){
   document.querySelector('#add_note').addEventListener('keypress', addNote)
 }
+
+function addMenuButtonListener(){
+  document.querySelector('#menu').addEventListener('click', toggleSidebar)
+  $("item").on("click", openPage)
+}
+function toggleSidebar(){
+  $("sidebar").toggle("slide")
+}
+function hideSidebar(){
+  $("sidebar").hide("slide")
+}
+function openPage(event){
+  var clickedPage = event.currentTarget.innerText; 
+  var pages = {
+    "Home": "#checkpoints_container",
+    "Settings": "#settings",
+    "Feedback": "#feedback",
+    "Help": "#howto",
+  }
+  for(page in pages){
+    $(pages[page]).hide();
+  }
+  $(pages[clickedPage]).show()
+  $('sidebar').hide()
+}
+
 function search(event){
   value = event.srcElement.value;
   for(checkpoint of allCheckpoints){

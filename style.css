@@ -1,20 +1,27 @@
 
 footer {
   position:fixed;
-  bottom:0;
-  width:100%;
-  height:20px;
-  /* background:white; */
+  bottom:10px;
+  width:90%;
+  margin-left:5%;
+  border-radius:  10px;;
+  box-sizing: border-box;
+  height:30px;
+  background:white;
   text-align:center;
 }
 #add_note{
-  margin:2px calc(15% - 10px);
-  width:70%;
+  z-index:2;
+  background-color:rgb(222, 236, 233);
+  margin-left:5px;
+  width:calc(100% - 10px);
   padding:3px 10px;
   border:none;
   outline:none;
-  height:20px;
-  border-bottom:2px solid rgb(22, 128, 48)
+  height:30px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  /* border-bottom:2px solid rgb(22, 128, 48) */
 }
 button {
     height: 30px;
@@ -40,15 +47,22 @@ button {
                 0 0 0 4px black;
   }
   #checkpoints{
-    overflow-y: auto;
     max-width: 100%;
-    height: calc( 100% - 100px ) ;
-    position: absolute;
-    top: 90px;
+    height:100%;
     width:100%;
+    margin-bottom:50px;
+    padding-bottom:50px;
     /* overflow-x: hidden; */
     /* overflow-x: none; */
   }
+#checkpoints_container{
+  overflow-y: auto;
+  max-width: 100%;
+  height: calc( 100% - 60px ) ;
+  position: absolute;
+  top: 60px;
+  width: 100%;
+}
 #title{
   padding:15px;
   padding-left: 0;;
@@ -147,4 +161,46 @@ body{
   padding:15px;
   padding-right:0;
   padding-top:20px;
+}
+#menu{
+  height: 23px;
+  filter: opacity(0.8);
+  width:auto;
+  display: inline-block;
+  padding:15px;
+  padding-right:0;
+  padding-top:20px;
+  cursor:pointer;
+}
+sidebar{
+  display: none;
+  position:absolute;
+  z-index:10;
+  left:0;
+  height: 100%;
+  top:0;
+  bottom:0;
+  width:40%;
+  box-shadow: 1px 1px 1px 1px lightgrey;
+  background-color: #e6edf1f0;
+}
+item{
+  display:block;
+  width:100%;
+  box-sizing: border-box;
+  padding:14px 20px;
+  font-size:17px;
+  cursor:pointer;
+}
+item:hover{
+  background-color: aliceblue;
+}
+item > img{
+  width: auto;
+  height: 21px;
+  margin-right: 5px;
+  vertical-align: sub;
+}
+#howto{
+  padding:15px;
 }
