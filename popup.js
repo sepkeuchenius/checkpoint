@@ -12,7 +12,6 @@ function loadCheckpoints(){
     if(result.checkpoints && result.checkpoints.length > 0){
       document.getElementById("checkpoints").innerHTML = ""
       var checkpoints = result.checkpoints;
-      checkpoints.reverse();
       var container = document.getElementById('checkpoints');
       for(point of checkpoints){
           console.log(point)
@@ -92,6 +91,10 @@ function addNote(event){
   if(event.key == "Enter"){
     checkpoint = new Checkpoint({"selection": event.srcElement.value})
     checkpoint.saveMeAsNew()
-    window.setTimeout(reloadCheckpoints, 200)
+    var container = document.getElementById('checkpoints');
+    checkpoint.draw(container)
+    // window.setTimeout(reloadCheckpoints, 200)
+    //remove content from input bar
+    event.srcElement.value = ""
   }
 }

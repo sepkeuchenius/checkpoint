@@ -118,6 +118,7 @@ class Checkpoint{
     }
     draw(container){
         this.createElement();
+        this.hide()
         this.createSelectionText();
         this.createUrlText();
         this.createTimeText();
@@ -127,9 +128,10 @@ class Checkpoint{
         }
         this.addTags()
         this.container = container;
-        container.appendChild(this.el);
+        $(container).prepend(this.el); //TODO: prepend or append based on settings
         this.truncate();
         this.addListeners();
+        this.show()
     }
     truncate(){
         //the element has been pushed to the extension
@@ -237,7 +239,8 @@ class Checkpoint{
         this.el.style.display = "none";
     }
     show(){
-        this.el.style.display = "block";
+        $(this.el).fadeIn()
+        // this.el.style.display = "block";
     }
     search(keyword){
         var selectionContains = this.selection.includes(keyword);
