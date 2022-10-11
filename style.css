@@ -201,6 +201,25 @@ item > img{
   margin-right: 5px;
   vertical-align: sub;
 }
-#howto{
+.page{
   padding:15px;
+}
+.setting{
+  width:80%;
+  margin-left:15px;
+  font-size:17px;
+  padding:15px;
+  box-sizing: border-box;
+}
+.setting .title {
+  font-size:17px;
+}
+.setting .options {
+  float:right;
+  font-size:15px;
+  border:none;
+  outline:none;
+  background-color: transparent;
+  padding:5px;
+  cursor:pointer;
 }
