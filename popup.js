@@ -1,6 +1,23 @@
 //constants
 const MAX_CHECKPOINT_HEIGHT = 200;
-
+const DEFAULT_SETTINGS = [
+  {
+    "name": "Color-theme",
+    "values": [
+      "Light",
+      "Dark"
+    ],
+    "current": "Light"
+  },
+  {
+    "name": "Checkpoint order",
+    "values": [
+      "Newest first",
+      "Oldest first"
+    ],
+    "current": "Newest first"
+  }
+]
 allCheckpoints = []
 
 function reloadCheckpoints(){
@@ -23,11 +40,25 @@ function loadCheckpoints(){
           checkpoint.draw(container);
           allCheckpoints.push(checkpoint)
       }
+function loadSettings(){
+  chrome.storage.sync.get("settings", function(result){
+    if(!result.settings){
+      chrome.storage.sync.set({"settings":DEFAULT_SETTINGS}, loadSettings)
+    }
+    else{
+      for(setting of result.settings){
+        console.log(setting)
+        new Setting(setting);
+      }
+    }
   })
 }
 
+
+
 window.onload = function(){
   loadCheckpoints();
+  loadSettings()
   addSearchListener();
   addNoteListener();
   addMenuButtonListener();
