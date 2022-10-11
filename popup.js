@@ -9,10 +9,8 @@ function reloadCheckpoints(){
 }
 function loadCheckpoints(){
   chrome.storage.sync.get("checkpoints", function(result){
-    if(!result.checkpoints || result.checkpoints.length == 0){
-      document.getElementById("checkpoints").innerHTML = "<center>Press CTRL + SHIFT + Y or Alt + Shift + Y to add checkpoints from a website.</center>"
-      return;
-    }
+    if(result.checkpoints && result.checkpoints.length > 0){
+      document.getElementById("checkpoints").innerHTML = ""
       var checkpoints = result.checkpoints;
       checkpoints.reverse();
       var container = document.getElementById('checkpoints');
@@ -23,8 +21,13 @@ function loadCheckpoints(){
           checkpoint.draw(container);
           allCheckpoints.push(checkpoint)
       }
+    }
+    else {
+      chrome.storage.sync.set({"checkpoints": []})
+    }
   })
 }
+
 
 window.onload = function(){
   loadCheckpoints();
