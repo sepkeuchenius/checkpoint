@@ -49,8 +49,7 @@ button {
   #checkpoints{
     max-width: 100%;
     width:100%;
-    margin-bottom:50px;
-    padding-bottom:50px;
+    padding-bottom:30px;
     /* overflow-x: hidden; */
     /* overflow-x: none; */
   }
