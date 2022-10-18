@@ -40,6 +40,10 @@ function loadCheckpoints(){
           checkpoint.draw(container);
           allCheckpoints.push(checkpoint)
       }
+    })
+}
+
+
 function loadSettings(){
   chrome.storage.sync.get("settings", function(result){
     if(!result.settings){
