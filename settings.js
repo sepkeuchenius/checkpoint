@@ -52,6 +52,7 @@ class Setting {
             }
             chrome.storage.sync.set({"settings": result.settings})
         })
+        executeSettings()
         
     }
     addChangeListener(){

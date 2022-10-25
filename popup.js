@@ -18,6 +18,10 @@ const DEFAULT_SETTINGS = [
     "current": "Newest first"
   }
 ]
+const SETTING_TO_FUNCTION = {
+  "Color-theme": loadTheme
+}
+var memory_settings = []
 allCheckpoints = []
 
 function reloadCheckpoints(){
@@ -50,12 +54,22 @@ function loadSettings(){
       chrome.storage.sync.set({"settings":DEFAULT_SETTINGS}, loadSettings)
     }
     else{
+      $('#settings').empty()
       for(setting of result.settings){
         console.log(setting)
-        new Setting(setting);
+        s = new Setting(setting);
+        memory_settings.push(s)
       }
     }
+    executeSettings()
   })
+}
+function executeSettings(){
+  for(s of memory_settings){
+    if(SETTING_TO_FUNCTION[s.name]){
+      SETTING_TO_FUNCTION[s.name].call(s, s)
+    }
+  }
 }
 
 
@@ -126,4 +140,22 @@ function addNote(event){
     checkpoint.saveMeAsNew()
     window.setTimeout(reloadCheckpoints, 200)
   }
+}
+function loadTheme(theme_setting){
+  if(theme_setting.current == "Light"){
+    // document.body.style.background = "white"
+  }
+  else{
+    document.body.style.background = "linear-gradient(0, #484f56, #2c363c)"
+  }
+}
+
+function color(x) {
+  $('html').css("-webkit-filter", "hue-rotate(" + x.toString() + "deg)")
+}
+
+
+
+function invert(x) {
+  $('html').css("-webkit-filter", "invert(" + x.toString() + "%)")
 }
