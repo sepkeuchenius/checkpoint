@@ -147,6 +147,7 @@ function loadTheme(theme_setting){
   }
   else{
     document.body.style.background = "linear-gradient(0, #484f56, #2c363c)"
+    //TODO: make this more elaborate
   }
 }
 
