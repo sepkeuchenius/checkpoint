@@ -1,7 +1,8 @@
 {
-    "name": "CheckPoint",
-    "description": "Save any part of a page any moment in time.",
-    "version": "0.56",
+    "name": "CheckPoint - Better Bookmarks",
+    "short_name": "CheckPoint",
+    "description": "Never lose a page ever again. Easily create checkpoints at any time.",
+    "version": "0.60",
     "manifest_version": 3,
     "background": {
         "service_worker": "background.js"

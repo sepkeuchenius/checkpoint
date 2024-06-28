@@ -23,7 +23,7 @@ chrome.runtime.onInstalled.addListener((details) => {
         startExtension()
     }
 })
-chrome.contextMenus.onClicked.addListener((onClickData, tab) => {
+chrome.contextMenus.onClicked.addListener(async (onClickData, tab) => {
     if(onClickData["menuItemId"] == "add_to_checkpoint"){
         saveTab(tab)
     } 
@@ -32,7 +32,7 @@ chrome.contextMenus.onClicked.addListener((onClickData, tab) => {
     }
     else if(onClickData["menuItemId"].includes("paste_selection_")){ 
         console.log("pasting selection")
-        pasteSelection(onClickData["menuItemId"].replace("paste_selection_", ""), tab)
+        await pasteSelection(onClickData["menuItemId"].replace("paste_selection_", ""), tab)
     }
     else if(onClickData["menuItemId"] == "paste_all_selections"){
         console.log("pasting all selections")
@@ -47,17 +47,34 @@ chrome.contextMenus.onClicked.addListener((onClickData, tab) => {
     }
 })
 
-function pasteSelection(text, tab){
+async function pasteSelection(text, tab){
+    var current =  await getCurrentTab();
+    if(current.url.includes("chrome://")){
+        buildNotification("Oops", "Chrome does not allow you to paste on this page.")
+        return
+    }
     console.log(text)
     chrome.scripting.executeScript({
         target: {tabId:tab.id},
         func: insertSelection,
-        args: [text]
-    })
+        args: [text],
+    }).then(injectionResults => {
+        console.log(injectionResults)
+        for (const {frameId, result} of injectionResults) {
+          if (result != text){
+            buildNotification("Oops", "Could not paste the content.")
+          }
+        }
+    }).catch((err)=>{
+        console.log(err)
+    });
 }
+
+
 function insertSelection(text){
     console.log(text)
     document.activeElement.value += text;
+    return text
 }
 
 function getSelectedElement(isStart = true) {
