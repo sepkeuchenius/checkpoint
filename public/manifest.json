@@ -7,18 +7,44 @@
     "16": "icons/icon_16.png",
     "32": "icons/icon_32.png",
     "48": "icons/icon_48.png",
-    "128": "icons/icon_128.png"
+    "128":"icons/checkpoint_128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "action": {
     "default_title": "My Extension",
     "default_popup": "popup.html"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "scripting",
+    "tabs",
+    "notifications",
+    "contextMenus",
+    "identity"
   ],
+  "commands": {
+    "save_checkpoint": {
+      "suggested_key": {
+        "windows": "Ctrl+Shift+Y",
+        "mac": "Ctrl+Shift+Y",
+        "chromeos": "Ctrl+Shift+Y",
+        "linux": "Ctrl+Shift+Y"
+      },
+      "description": "Save checkpoint"
+    },
+    "save_checkpoint_alt": {
+      "suggested_key": {
+        "windows": "Alt+Shift+Y",
+        "mac": "Alt+Shift+Y",
+        "chromeos": "Alt+Shift+Y",
+        "linux": "Alt+Shift+Y"
+      },
+      "description": "Save checkpoint"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
@@ -29,5 +55,9 @@
         "contentScript.js"
       ]
     }
-  ]
+  ],
+  "oauth2": {
+    "client_id": "957247696852-f9cukoukf6cs6bql71n6r2e2iv63r63m.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/userinfo.email"]
+}
 }

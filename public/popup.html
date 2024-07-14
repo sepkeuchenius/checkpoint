@@ -1,32 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>My Chrome Extension</title>
-    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+            <!-- update the version number as needed -->
+
   </head>
   <body>
-    <div class="app">
-      <p class="counter-label">Counter</p>
-      <div id="counter" class="counter"></div>
-      <div class="button-container">
-        <button id="decrementBtn" class="button">-</button>
-        <button id="incrementBtn" class="button">+</button>
+    <!-- <button id="changeColor"></button> -->
+    <img src='icons/menu.png' id="menu"><img src='icons/checkpoint_128.png' id='icon'> &nbsp <h1 id="title">Checkpoints</h1>
+    <input type='text' id='search' placeholder="Search..." >
+    <div id="checkpoints_container">
+      <input type="text" id="add_note" placeholder="Add quick note">
+      <div id='checkpoints'>
+        <h3 style='width:100%; padding:0 15%; box-sizing:border-box; text-align: center;font-weight:normal;margin-top:40%;'>
+          No checkpoints here! Add a quick note, or use CTRL/ALT + Shift + Y to add checkpoints from a website.
+        </h3>
+
       </div>
+    </div>
+    <div id="howto" class="page">
+      <br>
+      Use Ctrl+Shift+Y or Alt+Shift+Y to save a Checkpoint.<br>
+      You can also save a checkpoint using the right-click menu.<br>
+      If you want, you can select text, right-click the text and save as a Checkpoint.<br>
+      To quickly add some text, you can type in the extension.
+      <br><br>
+      To paste a checkpoint, right-click in a text-field and select paste checkpoint from the menu.<br>
+      <br><br>
+      Checkpoints save everything about your current open tab:
+      <ul>
+        <li>The URL</li>
+        <li>The time</li>
+        <li>The title of the page</li>
+        <li>The text selection</li>
+        <li>How far you scrolled down</li>
+        <li>The element of the page that you are in</li>
+        <li>The icon of the page</li>
+      </ul><br>
+      When you open a checkpoint, all this will automatically be loaded again.
 
-      <hr class="divider" />
+    </div>
+    
+    <div id="feedback" class="page">
+      <h2>Let me know what you think</h2>
+      <p>
+        As this extension is still in development, I would love 
+        to hear from you what could be done better. 
+      </p>
+      <p>
+        If you want to email me directly, click <a href="mailto:sep@sep.dev" target="_blank">here</a>
+      </p>
+      <p>
+        You can also leave a review and a rating in the Chrome Webstore if you wish.
+      </p>
+      <p>
+        If you want to leave a support ticket or a review, click <a target="_blank" href="https://chrome.google.com/webstore/detail/checkpoint/ioghepelnhpfiamjlgbcakmjmlnmmbcc">here</a>
+      </p>
 
-      <p class="title">Chrome Extension is Ready!</p>
-      <p class="subtitle">Start by updating <code>popup.html</code></p>
     </div>
 
+    <sidebar>
+      <item><img src='icons/Tiles/home.svg'>Home</item>
+      <item><img src='icons/Tiles/info.svg'>Help</item>
+      <!-- <item><img src='Tiles/settings.svg'>Settings</item> -->
+      <item><img src='icons/Tiles/feedback.svg'>Feedback</item>
+    </sidebar>
     <script src="popup.js"></script>
 
-    <!--
-      This HTML file opens when you click on icon from the toolbar.
-
-      To begin the development, run `npm run watch`.
-      To create a production bundle, use `npm run build`.
-    -->
-  </body>
+</body>
 </html>
