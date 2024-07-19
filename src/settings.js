@@ -2,6 +2,7 @@ export const UNSET = "UNSET"
 export class Settings{
     constructor(){
         this.google = UNSET
+        this.sync_local = true
     }
     async load(){
         await chrome.storage.sync.get("settings").then((result)=>{
@@ -16,11 +17,16 @@ export class Settings{
     }
     toJSON() {
         return {
-            google: this.google
+            google: this.google,
+            sync_local: this.sync_local
         }
     }
     wantsGoogle() {
         return this.google && this.google != UNSET
+    }
+    wantsToSyncLocal() {
+        console.log(this.sync_local)
+        return this.sync_local && this.sync_local != UNSET
     }
 }
 

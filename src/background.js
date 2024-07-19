@@ -2,7 +2,7 @@
 
 import { getCheckpointById, getCheckpoints, saveNewCheckpoint } from "./db.js";
 import { login } from "./login.js";
-import { buildNotification } from "./notification.js";
+import { buildNotification } from "./notifications.js";
 
 var UPDATE_MESSAGE = "More pasting support & Notifications" //a small message shown to the user on update. 
 

@@ -109,7 +109,10 @@ async function loadSettingsPage() {
   await user_settings.load()
   console.log(user_settings)
   $("#google").prop("checked", user_settings.google && user_settings.google != UNSET)
+  $("#sync_local").prop("checked", user_settings.sync_local && user_settings.sync_local != UNSET)
   if (user_settings.google) {
+    $("#sync_local").show();
+    $("#sync_local_label").show();
     const user_info = await getUserInfo();
     if (user_info.currentUser) {
       $("#loggedin").show()
@@ -118,6 +121,8 @@ async function loadSettingsPage() {
   }
   else {
     $("#loggedin").hide()
+    $("#sync_local").hide()
+    $("#sync_local_label").hide()
   }
 }
 
@@ -151,6 +156,18 @@ function addSettingsListeners() {
   $("#google").on('change', changeGoogleSetting)
   $("#loginlink").on('click', login)
   $("#nogoogle").on('click', changeGoogleSetting)
+  $("#sync_local").on('change', changeLocalSyncSetting)
+}
+async function changeLocalSyncSetting() {
+  const user_settings = new Settings()
+  await user_settings.load()
+  user_settings.sync_local = $("#sync_local").is(":checked")
+  console.log(user_settings)
+  await user_settings.save()
+  loadSettingsPage();
+  if (user_settings.sync_local) {
+    await syncCheckpointsToChrome()
+  }
 }
 async function changeGoogleSetting() {
   const user_settings = new Settings()

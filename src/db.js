@@ -20,7 +20,13 @@ function removeCheckpointFromFirebase(id) {
     get(ref(db, `users/${userId}/checkpoints`)).then((snapshot) => {
         var checkpoints = snapshot.val();
         checkpoints = checkpoints.filter(function (c) { return c.id != id });
-        set(ref(db, `users/${userId}/checkpoints`), checkpoints)
+        set(ref(db, `users/${userId}/checkpoints`), checkpoints).then((res) => {
+            useSyncLocal().then((syncLocal) => {
+                if (syncLocal) {
+                    syncCheckpointsToChrome()
+                }
+            })
+        });
     })
 }
 function removeCheckpointFromChrome(id) {
@@ -42,7 +48,7 @@ export function syncCheckpointsToChrome() {
     return getCheckPointsFromFirebase().then((checkpoints) => {
         return chrome.storage.sync.set({ "checkpoints": checkpoints }).catch((error) => {
             console.error("Failed to set checkpoints to Chrome storage:", error);
-            buildNotification("Failed to turn off Google Sync", "Failed to sync checkpoints to Chrome storage. You may have too many checkpoints.")
+            buildNotification("Your checkpoints are safe in the cloud", "However, they could not be synced locally. You may have too many checkpoints. Not to worry, your checkpoints are still safe in the cloud.")
             return false
         }).then((res) => {
             return res
@@ -74,6 +80,12 @@ export function useFirebase() {
         return settings.wantsGoogle() && getUserInfo().currentUser
     })
 }
+export function useSyncLocal() {
+    return userSettings().then((settings) => {
+        return settings.wantsToSyncLocal()
+    })
+}
+
 export function getCheckpoints() {
     return useFirebase().then((useFirebase) => {
         if (useFirebase) {
@@ -92,7 +104,12 @@ function getCheckPointsFromChrome() {
 function saveNewCheckpointToFirebase(checkpoint) {
     const userId = getUserInfo().currentUser.uid
     return push(ref(db, `users/${userId}/checkpoints`), checkpoint).then((res) => {
-        console.log(res)
+        useSyncLocal().then((syncLocal) => {
+            if (syncLocal) {
+                syncCheckpointsToChrome()
+            }
+        })
+        return res
     })
 }
 
@@ -126,9 +143,15 @@ export function updateCheckpoint(checkpoint) {
         return useFirebase().then((useFirebase) => {
             if (useFirebase) {
                 const userId = getUserInfo().currentUser.uid
-                set(ref(db, `users/${userId}/checkpoints`), checkpoints).then((res) => {
+                return set(ref(db, `users/${userId}/checkpoints`), checkpoints).then((res) => {
+                    useSyncLocal().then((syncLocal) => {
+                        if (syncLocal) {
+                            syncCheckpointsToChrome()
+                        }
+                    })
                     return res
                 })
+
             }
             else {
                 chrome.storage.sync.set({ "checkpoints": checkpoints }).then((res) => {
