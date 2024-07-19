@@ -1,11 +1,14 @@
 import $ from "jquery"
+const MAX_CHECKPOINT_HEIGHT = 200;
+import { getURLBase } from "./utils";
+import { removeCheckpointById, saveNewCheckpoint, updateCheckpoint } from "./db";
 export class Checkpoint{
     constructor(obj){
         this.id = obj.id || (Math.random() * 10000).toFixed(0);
         this.url = obj.url || "";
         this.selection = obj.selection;
-        this.scroll = obj.scroll;
-        this.element = obj.element;
+        this.scroll = obj.scroll || 0;
+        this.element = obj.element || null;
         this.title = obj.title || "";
         this.faviconUrl = obj.faviconUrl || "";
         this.currentButtonPosition = 4 //start 4 pixels from the side
@@ -87,9 +90,9 @@ export class Checkpoint{
     addButtons(){
         this.buttons = [
             // this.addButtonToCheckpoint("Star", this.starMe, 30), 
-            this.addButtonToCheckpoint("Tag", this.tagMe, 30), 
-            this.addButtonToCheckpoint("Delete", this.deleteMe, 45),            
-            this.addButtonToCheckpoint("Copy", this.copyMe, 35)          
+            this.addButtonToCheckpoint("Tag", this.tag, 30), 
+            this.addButtonToCheckpoint("Delete", this.delete, 45),            
+            this.addButtonToCheckpoint("Copy", this.copy, 35)          
         ]
         console.log(this.buttons)
     }
@@ -208,31 +211,25 @@ export class Checkpoint{
             button.style.display = "inline-block"
         }
     }
-    deleteMe(){
+    delete(){
         if(confirm("Are you sure?")){
             this.el.remove();
             var id = this.id
-
-            //remove from chrome storage
-            chrome.storage.sync.get("checkpoints", function(result){
-                var checkpoints = result.checkpoints;
-                checkpoints = checkpoints.filter(function(c){return c.id != id});
-                chrome.storage.sync.set({"checkpoints":checkpoints})
-            });
+            removeCheckpointById(id)
         }
     }
-    copyMe(){
+    copy(){
         navigator.clipboard.writeText(this.selection);
     }
-    starMe(){
+    star(){
         this.starred = true
     }
-    tagMe(){
+    tag(){
         var tag = prompt("Write your tag")
         if(tag.length > 0){
             this.tags.push(tag)
             this.addTag(tag)
-            this.saveMe()
+            this.save()
         }
         
     }
@@ -250,38 +247,19 @@ export class Checkpoint{
         var tagsContain = this.tags.includes(keyword);
         return selectionContains || urlContains || titleContains || tagsContain
     }
-    saveMe(){
-        var json = this.getJSON();
-        var id = this.id
-        chrome.storage.sync.get("checkpoints", function(result){
-            var current_checkpoints = result.checkpoints;
-            for(var c in current_checkpoints){
-                if(current_checkpoints[c].id == id){
-                    current_checkpoints[c] = json //replace with new 
-                }
-            }
-            chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
-                console.log("Checkpoint " + id + " saved")
-            })
-        });
+    save(){
+        updateCheckpoint(this.getJSON());
     }
-    saveMeAsNew(){
+    saveAsNew(){
         var json = this.getJSON()
-        var id = this.id;
-        chrome.storage.sync.get("checkpoints", function(result){
-            var current_checkpoints = result.checkpoints;
-            current_checkpoints.push(json)
-            chrome.storage.sync.set({"checkpoints": current_checkpoints}, function(res){
-                console.log("Checkpoint " + id + " saved")
-            })
-        });
-        window.setTimeout(function(){
+        saveNewCheckpoint(json).then((res)=>{
+            console.log(res);
             chrome.runtime.sendMessage({
                 type:"function",
                 function:'reloadContextMenu',
             });
-        },200)
-        
+        })
+            
     }
 
 }

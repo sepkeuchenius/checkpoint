@@ -3,14 +3,13 @@ h1, h2, h3{
 }
 footer {
   position:fixed;
-  bottom:10px;
-  width:90%;
-  margin-left:5%;
-  border-radius:  10px;;
-  box-sizing: border-box;
-  height:20px;
+  bottom:0px;
+  width:100%;
+  margin-left:0%;
+  border-radius:  0px;;
   background:white;
   text-align:center;
+  padding:10px;
 }
 #add_note{
   z-index:2;
@@ -51,7 +50,7 @@ button {
   #checkpoints{
     max-width: 100%;
     width:100%;
-    padding-bottom:30px;
+    padding-bottom:50px;
     /* overflow-x: hidden; */
     /* overflow-x: none; */
   }
@@ -223,4 +222,10 @@ item > img{
   background-color: transparent;
   padding:5px;
   cursor:pointer;
+}
+
+.link {
+  color:blue;
+  text-decoration: underline;
+  cursor: pointer;
 }

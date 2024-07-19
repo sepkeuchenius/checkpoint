@@ -22,8 +22,10 @@
     "webpack-merge": "^5.10.0"
   },
   "dependencies": {
+    "chrome-types": "^0.1.293",
     "firebase": "^10.12.3",
     "firebase-tools": "^13.13.2",
+    "insert-text-at-cursor": "^0.3.0",
     "jquery": "^3.7.1"
   }
 }

@@ -61,11 +61,26 @@
       </p>
 
     </div>
+    <div class="page" id="settings">
+      <h2>Settings</h2>
+      <p>
+        <input type="checkbox" id="google" name="google">
+        <label for="google">
+         Sync with Google
+        </label>
+      </p>
+      <p id="loggedin" style="display: none;">
+        Logged in as <span id="google_user"></span>
+      </p>
+    </div>
+    <footer>
+      <span class="link" id="login">Log in</span> to google to sync your checkpoints. <span class="link" id="nogoogle">Don't show again</span>
 
+    </footer>
     <sidebar>
       <item><img src='icons/Tiles/home.svg'>Home</item>
       <item><img src='icons/Tiles/info.svg'>Help</item>
-      <!-- <item><img src='Tiles/settings.svg'>Settings</item> -->
+      <item><img src='Tiles/settings.svg'>Settings</item>
       <item><img src='icons/Tiles/feedback.svg'>Feedback</item>
     </sidebar>
     <script src="popup.js"></script>
