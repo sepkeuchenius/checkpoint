@@ -4,7 +4,7 @@ import { getCheckpointById, getCheckpoints, saveNewCheckpoint } from "./db.js";
 import { login } from "./login.js";
 import { buildNotification } from "./notifications.js";
 
-var UPDATE_MESSAGE = "More pasting support & Notifications" //a small message shown to the user on update. 
+var UPDATE_MESSAGE = "Backups & Syncing with the cloud!" //a small message shown to the user on update. 
 
 chrome.commands.onCommand.addListener((command) => {
     console.log(`Command: ${command}`);
