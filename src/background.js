@@ -39,8 +39,8 @@ chrome.contextMenus.onClicked.addListener(async (onClickData, tab) => {
     else if (onClickData["menuItemId"].includes("paste_selection_")) {
         console.log("pasting selection")
         const checkpointID = onClickData["menuItemId"].replace("paste_selection_", "")
-        getCheckpointById(checkpointID).then((checkpoint)=>{
-             pasteSelection(checkpoint.selection, tab)
+        getCheckpointById(checkpointID).then((checkpoint) => {
+            pasteSelection(checkpoint.selection, tab)
         })
     }
     else if (onClickData["menuItemId"] == "paste_all_selections") {
@@ -82,9 +82,9 @@ async function pasteSelection(text, tab) {
 function insertSelection(newText, el = document.activeElement) {
     const [start, end] = [el.selectionStart, el.selectionEnd];
     el.setRangeText(newText, start, end);
-    
+
     return newText
-  }
+}
 
 function getSelectedElement(isStart = true) {
     var range, sel, container;
@@ -161,6 +161,54 @@ async function getTabSelectedElement(tab) {
     return result.result;
 }
 
+async function getUrl(tab) {
+    let [result] = await chrome.scripting.executeScript(
+        {
+            target: { tabId: tab.id, allFrames: true },
+            func: getURLWithTextFragment,
+        });
+    return result.result;
+
+}
+
+function getURLWithTextFragment() {
+    var selection = window.getSelection().toString();
+    const selectionWords = selection.split(' ')
+    const selectionWordCount = selectionWords.length
+
+    const completeElementText = window.getSelection().getRangeAt(0).commonAncestorContainer.textContent
+    const selectionInCompleteText = completeElementText.indexOf(selection)
+    const selectionInCompleteTextEnd = selectionInCompleteText + selection.length
+    const mark = '-,'
+
+    var beforeElement = completeElementText.substring(0, selectionInCompleteText)
+    var afterElement = completeElementText.substring(selectionInCompleteTextEnd)
+
+    if (beforeElement[beforeElement.length - 1] == ' ' || selection[0] == ' ') {
+        const beforeElementWords = beforeElement.split(' ')
+    }
+    else {
+        var beforeElementWords = beforeElement.split(' ')
+        selection = `${beforeElementWords.splice(beforeElement.length - 1, 1)}${selection}`
+    }
+
+    if (afterElement[0] == ' ' || selection[selection.length - 1] == ' ') {
+        const afterElementWords = afterElement.split(' ')
+    }
+    else {
+        var afterElementWords = afterElement.split(' ')
+        selection = `${selection}${afterElementWords.splice(0, 1)}`
+    }
+
+    beforeElement = beforeElementWords.join(' ')
+    afterElement = afterElementWords.join(' ')
+
+    const element = encodeURIComponent(selection)
+    const elementTextWithSelectionMarked = `${encodeURIComponent(beforeElement)}-,${element},-${encodeURIComponent(afterElement)}`
+    const url = window.location.href;
+    const fragment = `#:~:text=${elementTextWithSelectionMarked}`;
+    return url + fragment;
+}
 
 async function saveTab(tab) {
     if (!tab) {
@@ -175,7 +223,7 @@ async function saveTab(tab) {
     }
     try {
         var selection = await getTabSelection(current);
-        var url = current.url;
+        var url = getUrl(current);
         var title = current.title;
         var scroll = await getTabScroll(current);
         var element = await getTabSelectedElement(current);

@@ -3,6 +3,6 @@ export async function buildNotification(title, content) {
         "title": title,
         "message": content,
         "iconUrl": "icons/checkpoint_128.png",
-        "type": "basic",
-    })
+        "type": "basic"
+    });
 }
