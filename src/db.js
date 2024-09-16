@@ -17,8 +17,7 @@ export function removeCheckpointById(id) {
 }
 function removeCheckpointFromFirebase(id) {
     const userId = getUserInfo().currentUser.uid
-    get(ref(db, `users/${userId}/checkpoints`)).then((snapshot) => {
-        var checkpoints = snapshot.val();
+    getCheckPointsFromFirebase().then((checkpoints) => {
         checkpoints = checkpoints.filter(function (c) { return c.id != id });
         set(ref(db, `users/${userId}/checkpoints`), checkpoints).then((res) => {
             useSyncLocal().then((syncLocal) => {

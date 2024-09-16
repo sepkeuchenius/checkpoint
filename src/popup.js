@@ -2,7 +2,7 @@ import { getUserInfo, login, signOutUser } from "./login.js"
 import $ from "jquery"
 import { Checkpoint } from "./checkpoint.js";
 import { getCheckpoints, setInitialCheckpointList, syncCheckpointsToChrome } from "./db.js";
-import { Settings, UNSET } from "./settings.js";
+import { Settings, UNSET, userSettings } from "./settings.js";
 //constants
 
 var allCheckpoints = []
@@ -154,7 +154,7 @@ function updateFooter() {
 
 function addSettingsListeners() {
   $("#google").on('change', changeGoogleSetting)
-  $("#loginlink").on('click', login)
+  $("#loginlink").on('click', loginAndChangegoogleSetting)
   $("#nogoogle").on('click', changeGoogleSetting)
   $("#sync_local").on('change', changeLocalSyncSetting)
 }
@@ -169,6 +169,17 @@ async function changeLocalSyncSetting() {
     await syncCheckpointsToChrome()
   }
 }
+
+async function loginAndChangegoogleSetting() {
+  const user_settings = new Settings()
+  await user_settings.load()
+  user_settings.google = true
+  await user_settings.save()
+  await login()
+  loadSettingsPage();
+  loadFirebase();
+}
+
 async function changeGoogleSetting() {
   const user_settings = new Settings()
   await user_settings.load()

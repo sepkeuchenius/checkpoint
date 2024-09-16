@@ -3,7 +3,7 @@
   "name": "CheckPoint - Better Bookmarks and Clipboard",
   "short_name": "CheckPoint",
   "description": "Never lose a page ever again. Easily create checkpoints at any time.",
-  "version": "0.70",
+  "version": "0.73",
   "icons": {
     "128": "icons/checkpoint_128.png"
   },
